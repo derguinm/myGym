@@ -90,15 +90,16 @@ export class TopicService {
    * @param post {Post}, the new {Post} to add
    */
   createPost(topicId: string, post: Post) {
-    //Ajout d'un post a un topic
-    //TODO : remplacer par la methode qui le cree dans firebase
-    // --- Voir la methode create et le commentaire note pour plus tard dans la methode findAll
-    const topics = this.topics$.value;
-    let topicIndex = topics.findIndex(t=>t.id === topicId)
-    if(topicIndex > -1) {
-      topics[topicIndex].posts = topics[topicIndex]?.posts.concat(post);
-    }
-    this.topics$.next(topics)
+    //avant firestore :
+    // const topics = this.topics$.value;
+    // let topicIndex = topics.findIndex(t=>t.id === topicId)
+    // if(topicIndex > -1) {
+    //   topics[topicIndex].posts = topics[topicIndex]?.posts.concat(post);
+    // }
+    // this.topics$.next(topics)
+
+    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Topic>
+    addDoc(collectionRef, post)
   }
 
   /**
@@ -108,14 +109,14 @@ export class TopicService {
    * @param post {Post}, the {Post} to remove
    */
   deletePost(topicId: string, post: Post): void {
-    //Suppression d'un post d'un topic
-    //TODO : remplacer par la methode qui le supprime dans firebase
-    // --- Voir la methode delete et le commentaire note pour plus tard dans la methode findAll
-    const topics = this.topics$.value;
-    const topicIndex = topics.findIndex(t=>t.id === topicId)
-    if(topicIndex > -1) {
-      topics[topicIndex].posts = topics[topicIndex]?.posts.filter(p => p.id !== post.id);
-    }
-    this.topics$.next(topics)
+    //avant firestore :
+    // const topics = this.topics$.value;
+    // const topicIndex = topics.findIndex(t=>t.id === topicId)
+    // if(topicIndex > -1) {
+    //   topics[topicIndex].posts = topics[topicIndex]?.posts.filter(p => p.id !== post.id);
+    // }
+    // this.topics$.next(topics)
+    const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Topic>;
+    deleteDoc(documentRef);
   }
 }
