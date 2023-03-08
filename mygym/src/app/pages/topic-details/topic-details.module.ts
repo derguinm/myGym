@@ -9,6 +9,7 @@ import { TopicDetailsPageRoutingModule } from './topic-details-routing.module';
 import { TopicDetailsPage } from './topic-details.page';
 
 @NgModule({
+
   imports: [
     CommonModule,
     FormsModule,

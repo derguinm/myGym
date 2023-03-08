@@ -3,6 +3,7 @@ import { TopicService } from 'src/app/services/topic.service';
 import { Observable, EMPTY } from 'rxjs';
 import { Topic } from 'src/app/models/topic';
 import { ModalController, ToastController } from '@ionic/angular';
+import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
 
 @Component({
   selector: 'app-topics-list',
