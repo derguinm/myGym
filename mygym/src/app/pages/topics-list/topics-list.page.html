@@ -8,11 +8,11 @@
 
 
 <ion-content [fullscreen]="true">
-  <!--<ion-searchbar placeholder="Rechercher un topic" (ionChange)="test($any($event.target).value)"></ion-searchbar>-->
+  <ion-searchbar placeholder="Rechercher un topic" (ionChange)="search($any($event.target).value)"></ion-searchbar>
   <ion-list *ngIf="topics$ | async as topics">
     <!-- Sliding item with text options on both sides -->
     <ion-item-sliding *ngFor="let topic of topics">
-      <ion-item [routerLink]="['/topic/' + topic.id ]" routerLinkActive="active" lines="none">
+      <ion-item [routerLink]="['/topics/' + topic.id]" routerLinkActive="active" lines="none">
         <ion-label>{{ topic.name }}</ion-label>
       </ion-item>
 

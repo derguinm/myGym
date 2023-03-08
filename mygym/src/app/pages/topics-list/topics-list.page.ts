@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TopicService } from 'src/app/services/topic.service';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable, EMPTY, tap, switchMap, map, BehaviorSubject } from 'rxjs';
 import { Topic } from 'src/app/models/topic';
 import { ModalController, ToastController } from '@ionic/angular';
 import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
@@ -15,6 +15,7 @@ export class TopicsListPage implements OnInit {
 
 
   search$: Observable<String> = EMPTY;
+  _search: BehaviorSubject<string> = new BehaviorSubject("");
   topics$: Observable<Topic[]> = EMPTY;
 
   private topicService = inject(TopicService);
@@ -25,6 +26,7 @@ export class TopicsListPage implements OnInit {
    * Fetch all the topic during the ngOnInit hook
    */
   ngOnInit(): void {
+    this.search$ = this._search.asObservable();
     // this.topics$ = this.topicService.findAll().pipe(
     //   tap(console.log),
     //   switchMap(topics=>this.search$, (topics,search) =>
@@ -32,12 +34,7 @@ export class TopicsListPage implements OnInit {
     //   )
     // )
 
-    this.topics$ = this.topicService.findAll()/*.pipe(
-      tap(console.log),
-      switchMap(topics=>this.search$.pipe(
-        map(search => topics.filter((t : Topic) => t.name.toLocaleUpperCase().includes(search.toLocaleUpperCase())))
-      ))
-    )*/
+    this._fetchAllTopics()
   }
 
   /**
@@ -75,12 +72,17 @@ export class TopicsListPage implements OnInit {
    * @private method to fetch all the {Topic}
    */
   private _fetchAllTopics(): void {
-    this.topics$ = this.topicService.findAll();
+    this.topics$ = this.topicService.findAll().pipe(
+      tap(console.log),
+      switchMap(topics=>this.search$.pipe(
+        map(search => topics.filter((t : Topic) => t.name.toLocaleUpperCase().includes(search.toLocaleUpperCase())))
+      ))
+    )
   }
 
-  // private search(value : any){
-  //   this.search$.next(value)
-  // }
+  search(value : any){
+    this._search.next(value)
+  }
 
   /**
    * @private method to create a new {Topic}
