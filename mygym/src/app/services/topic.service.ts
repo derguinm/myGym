@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { Post } from '../models/post';
-import { Topic } from '../models/topic';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Firestore, collection, collectionData, doc, docData, addDoc, CollectionReference, DocumentReference, deleteDoc} from '@angular/fire/firestore'
+import { Post } from '../models/post';
+import { Topic } from '../models/topic';
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +98,7 @@ export class TopicService {
     // }
     // this.topics$.next(topics)
 
-    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Topic>
+    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
     addDoc(collectionRef, post)
   }
 
@@ -116,7 +116,7 @@ export class TopicService {
     //   topics[topicIndex].posts = topics[topicIndex]?.posts.filter(p => p.id !== post.id);
     // }
     // this.topics$.next(topics)
-    const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Topic>;
+    const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Post>;
     deleteDoc(documentRef);
   }
 }

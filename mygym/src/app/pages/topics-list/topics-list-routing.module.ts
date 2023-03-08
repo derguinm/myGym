@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { TopicsListPage } from './topics-list.page';
 
 const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./topics-list.page').then( m => m.TopicsListPage)
+    component: TopicsListPage
   },
   {
-    path: '/:id',
+    path: ':id',
     loadChildren: () => import('../topic-details/topic-details.module').then( m => m.TopicDetailsPageModule)
   },
 ];

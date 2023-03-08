@@ -7,15 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { TopicsListPageRoutingModule } from './topics-list-routing.module';
 
 import { TopicsListPage } from './topics-list.page';
+import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    // ReactiveFormsModule,
+    ReactiveFormsModule,
     IonicModule,
     TopicsListPageRoutingModule
   ],
-  declarations: [TopicsListPage]
+  declarations: [TopicsListPage,CreateTopicComponent]
 })
 export class TopicsListPageModule {}

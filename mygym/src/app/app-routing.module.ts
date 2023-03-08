@@ -20,6 +20,7 @@ export const routes: Routes = [
   {
     path: 'topics',
     loadChildren: () => import('./pages/topics-list/topics-list.module').then( m => m.TopicsListPageModule)
+    // loadComponent: () => import('./pages/topics-list/topics-list.page').then( m => m.TopicsListPage)
   },
   {
     path: '',
