@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { TopicsListPageRoutingModule } from './topics-list-routing.module';
-
 import { TopicsListPage } from './topics-list.page';
 import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
+import { SharedModule } from 'src/app/components/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +13,8 @@ import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.c
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    TopicsListPageRoutingModule
+    TopicsListPageRoutingModule,
+    SharedModule
   ],
   declarations: [TopicsListPage,CreateTopicComponent]
 })
