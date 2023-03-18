@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController, ModalController } from '@ionic/angular';
 import { BehaviorSubject, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { CreatePostComponent } from 'src/app/modals/create-post/create-post.component';
-import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
 import { Post } from 'src/app/models/post';
 import { Topic } from 'src/app/models/topic';
 import { PostService } from 'src/app/services/post.service';
