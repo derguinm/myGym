@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { Topic } from 'src/app/models/topic';
 
 @Component({
-  selector: 'app-list-item',
-  templateUrl: './list-item.component.html',
-  styleUrls: ['./list-item.component.scss'],
+  selector: 'app-topic-list-item',
+  templateUrl: './topic-list-item.component.html',
+  styleUrls: ['./topic-list-item.component.scss'],
 })
-export class ListItemComponent implements OnInit {
+export class TopicListItemComponent implements OnInit {
   // @ts-ignore
   @Input() topic: Topic
   @Output() onDelete: EventEmitter<Topic> = new EventEmitter();
