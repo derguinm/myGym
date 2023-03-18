@@ -12,7 +12,7 @@ export class TopicService {
   private firestore = inject(Firestore);
 
   //l'observable qu'on utilisait avant le firestore :
-  private topics$: BehaviorSubject<Topic[]> = new BehaviorSubject([{id: '123', name: 'test', posts: []} as Topic, {id: '123', name: 'test', posts: []} as Topic]);
+  //private topics$: BehaviorSubject<Topic[]> = new BehaviorSubject([{id: '123', name: 'test', posts: []} as Topic, {id: '123', name: 'test', posts: []} as Topic]);
 
   /**
    * Method that returns all the topics
@@ -47,7 +47,7 @@ export class TopicService {
     // )
 
     //recuperation d'un topic dans firebase par id :
-    const documentRef = doc(this.firestore, `topics/${id}/posts`)
+    const documentRef = doc(this.firestore, `topics/${id}`)
     return docData<any>(documentRef, {idField: 'id'})
   }
 
@@ -80,43 +80,6 @@ export class TopicService {
 
     //suppression d'un topic dans firestore :
     const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
-    deleteDoc(documentRef);
-  }
-
-  /**
-   * Add a new {Post} to the list of {Post} of the {Topic} that match the given topicId
-   *
-   * @param topicId {string}, the id of the {Topic} we want to add the new {Post}
-   * @param post {Post}, the new {Post} to add
-   */
-  createPost(topicId: string, post: Post) {
-    //avant firestore :
-    // const topics = this.topics$.value;
-    // let topicIndex = topics.findIndex(t=>t.id === topicId)
-    // if(topicIndex > -1) {
-    //   topics[topicIndex].posts = topics[topicIndex]?.posts.concat(post);
-    // }
-    // this.topics$.next(topics)
-
-    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
-    addDoc(collectionRef, post)
-  }
-
-  /**
-   * Remove a {Post} from the list of {Post} of the {Topic} that match the given topicId
-   *
-   * @param topicId {string}, the id of the {Topic} we want to remove the {Post}
-   * @param post {Post}, the {Post} to remove
-   */
-  deletePost(topicId: string, post: Post): void {
-    //avant firestore :
-    // const topics = this.topics$.value;
-    // const topicIndex = topics.findIndex(t=>t.id === topicId)
-    // if(topicIndex > -1) {
-    //   topics[topicIndex].posts = topics[topicIndex]?.posts.filter(p => p.id !== post.id);
-    // }
-    // this.topics$.next(topics)
-    const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Post>;
     deleteDoc(documentRef);
   }
 }

@@ -9,7 +9,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'posts/:id',
+    path: 'posts/:postId',
     loadChildren: () => import("../post-details/post-details.module").then( m => m.PostDetailsPageModule)
   },
 

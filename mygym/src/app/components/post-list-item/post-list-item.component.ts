@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
 
@@ -8,7 +8,7 @@ import { Post } from 'src/app/models/post';
   styleUrls: ['./post-list-item.component.scss'],
 })
 export class PostListItemComponent implements OnInit {
-  // @ts-ignore
+
   @Input() post: Post
   @Output() onDelete: EventEmitter<Post> = new EventEmitter();
 
@@ -19,7 +19,7 @@ export class PostListItemComponent implements OnInit {
   }
 
   navigate(){
-    this.router.navigate(['posts',this.post.id])
+    this.router.navigate([this.router.url + '/posts',this.post.id])
   }
 
 }

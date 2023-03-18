@@ -12,8 +12,6 @@ import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.c
 })
 export class TopicsListPage implements OnInit {
 
-
-
   search$: Observable<String> = EMPTY;
   _search: BehaviorSubject<string> = new BehaviorSubject("");
   topics$: Observable<Topic[]> = EMPTY;

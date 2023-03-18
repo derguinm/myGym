@@ -8,7 +8,7 @@ const routes: Routes = [
     component: TopicsListPage
   },
   {
-    path: ':id',
+    path: ':topicId',
     loadChildren: () => import('../topic-details/topic-details.module').then( m => m.TopicDetailsPageModule)
   },
 ];

@@ -1,9 +1,25 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>topic-details</ion-title>
+    <ion-title *ngIf="topic$ | async as topic">
+      {{ topic.name }}
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
 
+<!-- mettre une description du topic -->
+
+<ion-content [fullscreen]="true">
+  <ion-searchbar placeholder="Rechercher un post" (ionChange)="search($any($event.target).value)"></ion-searchbar>
+  <ion-list *ngIf="posts$ | async as posts">
+    <!-- Sliding item with text options on both sides -->
+    <ion-item-sliding *ngFor="let post of (posts)">
+      <app-post-list-item [post]="post" (onDelete)="delete($event)"></app-post-list-item>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button (click)="openCreatePostModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

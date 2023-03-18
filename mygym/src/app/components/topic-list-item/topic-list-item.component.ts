@@ -8,7 +8,6 @@ import { Topic } from 'src/app/models/topic';
   styleUrls: ['./topic-list-item.component.scss'],
 })
 export class TopicListItemComponent implements OnInit {
-  // @ts-ignore
   @Input() topic: Topic
   @Output() onDelete: EventEmitter<Topic> = new EventEmitter();
 
