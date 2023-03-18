@@ -26,7 +26,11 @@ export const routes: Routes = [
     path: '',
     redirectTo: 'topics',
     pathMatch: 'full'
+  },  {
+    path: 'post-details',
+    loadChildren: () => import('./pages/post-details/post-details.module').then( m => m.PostDetailsPageModule)
   }
+
 ];
 
 @NgModule({

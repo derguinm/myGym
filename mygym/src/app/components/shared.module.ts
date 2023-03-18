@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { TopicListItemComponent } from './topic-list-item/topic-list-item.component';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { PostListItemComponent } from './post-list-item/post-list-item.component';
 
 
 
 @NgModule({
   declarations: [
-    TopicListItemComponent
+    TopicListItemComponent,
+    PostListItemComponent
   ],
   imports: [
     CommonModule,
@@ -17,6 +19,7 @@ import { FormsModule } from '@angular/forms';
   ],
   exports:[
     TopicListItemComponent,
+    PostListItemComponent,
     CommonModule,
     FormsModule,
   ]

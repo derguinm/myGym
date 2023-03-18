@@ -8,13 +8,10 @@ const routes: Routes = [
     component: TopicDetailsPage
   },
 
-  /*
-  * Quand on ajoutera la page de detail des posts :
   {
-    path: '/posts/:id',
-    loadChildren: () => import(page de liste des posts).then( m => m.)
+    path: 'posts/:id',
+    loadChildren: () => import("../post-details/post-details.module").then( m => m.PostDetailsPageModule)
   },
-  */
 
 ];
 
