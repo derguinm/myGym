@@ -14,7 +14,7 @@
   <ion-list *ngIf="posts$ | async as posts">
     <!-- Sliding item with text options on both sides -->
     <ion-item-sliding *ngFor="let post of (posts)">
-      <app-post-list-item [post]="post" (onDelete)="delete($event)"></app-post-list-item>
+      <app-post-list-item [post]="post" (onDelete)="delete($event)" (onUpdate)="openUpdatePostModal($event)"></app-post-list-item>
     </ion-item-sliding>
   </ion-list>
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">

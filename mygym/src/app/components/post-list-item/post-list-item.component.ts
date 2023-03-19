@@ -11,6 +11,7 @@ export class PostListItemComponent implements OnInit {
 
   @Input() post: Post
   @Output() onDelete: EventEmitter<Post> = new EventEmitter();
+  @Output() onUpdate: EventEmitter<Post> = new EventEmitter();
 
   constructor(private router:Router) { }
 

@@ -9,6 +9,7 @@ import { TopicDetailsPageRoutingModule } from './topic-details-routing.module';
 import { TopicDetailsPage } from './topic-details.page';
 import { SharedModule } from 'src/app/components/shared.module';
 import { CreatePostComponent } from 'src/app/modals/create-post/create-post.component';
+import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.component';
 
 @NgModule({
 
@@ -20,6 +21,6 @@ import { CreatePostComponent } from 'src/app/modals/create-post/create-post.comp
     TopicDetailsPageRoutingModule,
     SharedModule
   ],
-  declarations: [TopicDetailsPage, CreatePostComponent]
+  declarations: [TopicDetailsPage, CreatePostComponent, UpdatePostComponent]
 })
 export class TopicDetailsPageModule {}

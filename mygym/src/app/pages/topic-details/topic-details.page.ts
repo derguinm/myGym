@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastController, ModalController } from '@ionic/angular';
 import { BehaviorSubject, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { CreatePostComponent } from 'src/app/modals/create-post/create-post.component';
+import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.component';
 import { Post } from 'src/app/models/post';
 import { Topic } from 'src/app/models/topic';
 import { PostService } from 'src/app/services/post.service';
@@ -78,6 +79,52 @@ export class TopicDetailsPage implements OnInit {
     }
   }
 
+  async openUpdatePostModal(post: Post): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: UpdatePostComponent,
+      componentProps: {
+        post: post
+      }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirmed') {
+      this._updatePost(data);
+      this._fetchAllPosts();
+    }
+  }
+
+  /**
+   * @private method to update a {Post}
+   *
+   * @param post {Post} the {Post} to put to the list
+   */
+  private async _updatePost(post: Post): Promise<void> {
+    try {
+      this.postService.update(this.topicId, post);
+
+      const toast = await this.toastController.create({
+        message: `Post successfully updated`,
+        duration: 1500,
+        position: 'bottom',
+        color: 'success'
+      });
+
+      await toast.present();
+    } catch (e) {
+      const toast = await this.toastController.create({
+        message: `Failed updating post`,
+        duration: 1500,
+        position: 'bottom',
+        color: 'danger'
+      });
+
+      await toast.present();
+    }
+  }
+
   /**
    * @private method to fetch all the {Posts}
    */
@@ -113,7 +160,7 @@ export class TopicDetailsPage implements OnInit {
       await toast.present();
     } catch (e) {
       const toast = await this.toastController.create({
-        message: `Failed creating Topic ${post.name}`,
+        message: `Failed creating Post ${post.name}`,
         duration: 1500,
         position: 'bottom',
         color: 'danger'

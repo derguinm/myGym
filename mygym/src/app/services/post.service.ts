@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Post } from '../models/post';
 
@@ -45,6 +45,17 @@ export class PostService {
 
     const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
     addDoc(collectionRef, post)
+  }
+
+  /**
+   * update a {Post} from the list of {Post} of the {Topic} that match the given topicId
+   *
+   * @param topicId {string}, the id of the {Topic} we want to update the {Post}
+   * @param post {Post}, the {Post} to update
+   */
+  update(topicId: string, post: Post): void {
+    const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Post>;
+    updateDoc(documentRef, post);
   }
 
   /**

@@ -4,6 +4,10 @@
 </ion-item>
 
 <ion-item-options side="end">
+  <ion-item-option (click)="onUpdate.emit(post)" color="warning">
+    <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+  </ion-item-option>
+
   <ion-item-option (click)="onDelete.emit(post)" color="danger">
     <ion-icon slot="icon-only" name="trash"></ion-icon>
   </ion-item-option>
