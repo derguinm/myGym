@@ -9,6 +9,7 @@ import { TopicsListPageRoutingModule } from './topics-list-routing.module';
 import { TopicsListPage } from './topics-list.page';
 import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
 
+
 @NgModule({
   imports: [
     CommonModule,

@@ -1,31 +1,33 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { redirectUnauthorizedTo, redirectLoggedInTo, canActivate} from '@angular/fire/auth-guard';
 
-// const routes: Routes = [
-//   {
-//     path: 'home',
-//     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-//   },
-//   {
-//     path: 'message/:id',
-//     loadChildren: () => import('./view-message/view-message.module').then( m => m.ViewMessagePageModule)
-//   },
-//   {
-//     path: '',
-//     redirectTo: 'home',
-//     pathMatch: 'full'
-//   },
-// ];
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
+const redirectLoggedToHome = () => redirectLoggedInTo(['topics']);
+
 export const routes: Routes = [
   {
+    path: '',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule),
+    ...canActivate(redirectLoggedToHome)
+  },
+  {
     path: 'topics',
-    loadChildren: () => import('./pages/topics-list/topics-list.module').then( m => m.TopicsListPageModule)
-    // loadComponent: () => import('./pages/topics-list/topics-list.page').then( m => m.TopicsListPage)
+    loadChildren: () => import('./pages/topics-list/topics-list.module').then( m => m.TopicsListPageModule),
+    ...canActivate(redirectUnauthorizedToLogin)
   },
   {
     path: '',
-    redirectTo: 'topics',
+    redirectTo: '',
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'registration',
+    loadChildren: () => import('./registration/registration.module').then( m => m.RegistrationPageModule)
   }
 ];
 

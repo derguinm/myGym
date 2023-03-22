@@ -4,6 +4,9 @@ import { Observable, EMPTY, tap, switchMap, map, BehaviorSubject } from 'rxjs';
 import { Topic } from 'src/app/models/topic';
 import { ModalController, ToastController } from '@ionic/angular';
 import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-topics-list',
@@ -21,7 +24,8 @@ export class TopicsListPage implements OnInit {
   private topicService = inject(TopicService);
   private toastController = inject(ToastController);
   private modalCtrl = inject(ModalController);
-
+  private AuthServ = inject(AuthService);
+  private router = inject(Router)
   /**
    * Fetch all the topic during the ngOnInit hook
    */
@@ -111,6 +115,11 @@ export class TopicsListPage implements OnInit {
 
       await toast.present();
     }
+  }
+
+  async logout(){
+    this.AuthServ.logout();
+    this.router.navigateByUrl('', {replaceUrl: true})
   }
 
 }
