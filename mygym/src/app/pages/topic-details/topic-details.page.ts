@@ -41,10 +41,7 @@ export class TopicDetailsPage implements OnInit {
     //   )
     // )
     this.topic$ = this.topicService.findOne(this.route.snapshot.paramMap.get('topicId')!);
-    this.topic$.subscribe(topic => {
-      this.topicId = topic!.id;
-      this._fetchAllPosts()
-    });
+    this.topicId = this.route.snapshot.paramMap.get('topicId')!
     this._fetchAllPosts()
   }
 
@@ -55,7 +52,6 @@ export class TopicDetailsPage implements OnInit {
    */
   delete(post: Post): void {
     this.postService.delete(this.topicId, post);
-    this._fetchAllPosts();
   }
 
   /**
@@ -75,7 +71,6 @@ export class TopicDetailsPage implements OnInit {
 
     if (role === 'confirmed') {
       this._createPost(data);
-      this._fetchAllPosts();
     }
   }
 
@@ -92,7 +87,6 @@ export class TopicDetailsPage implements OnInit {
 
     if (role === 'confirmed') {
       this._updatePost(data);
-      this._fetchAllPosts();
     }
   }
 

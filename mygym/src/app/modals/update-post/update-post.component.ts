@@ -35,8 +35,8 @@ export class UpdatePostComponent implements OnInit {
    */
   ngOnInit() {
     this.updatePostForm = this.formBuilder.group({
-      name: ['', [Validators.minLength(2)]],
-      description: ['', []]
+      name: [this.post.name, [Validators.minLength(2)]],
+      description: [this.post.description, []]
     });
   }
 

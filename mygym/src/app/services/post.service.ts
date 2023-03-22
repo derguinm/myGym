@@ -19,7 +19,7 @@ export class PostService {
     //avant firestore : return this.topics$.asObservable();
 
     //recuperation de tous les topics dans firebase :
-    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`)
+    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
     return collectionData<any>(collectionRef, {idField: 'id'})
 
     //note pour plus tard :

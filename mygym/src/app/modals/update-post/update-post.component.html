@@ -4,7 +4,7 @@
       <ion-buttons slot="start">
         <ion-button fill="clear" color="primary" (click)="dismissModal(null, 'canceled')">Close</ion-button>
       </ion-buttons>
-      <ion-title>Modal Content</ion-title>
+      <ion-title>Modifier un programme</ion-title>
       <ion-buttons slot="end">
         <ion-button fill="clear" color="primary" [disabled]="updatePostForm.invalid" type="submit">
           <ion-icon name="checkmark-outline"></ion-icon>
@@ -16,7 +16,7 @@
 
     <ion-item lines="full">
       <ion-label position="floating">Name</ion-label>
-      <ion-input type="text" name="name" formControlName="name" value="{{ post.name }}"></ion-input>
+      <ion-input type="text" name="name" formControlName="name" ></ion-input>
     </ion-item>
     <ion-text color="danger" *ngIf="controls['name'].touched && controls['name'].errors?.['minlength']">
       <span>
@@ -25,7 +25,7 @@
     </ion-text>
     <ion-item lines="full">
       <ion-label position="floating">Description</ion-label>
-      <ion-textarea type="text" name="description" formControlName="description" value="{{ post.description }}"></ion-textarea>
+      <ion-textarea type="text" name="description" formControlName="description" ></ion-textarea>
     </ion-item>
   </ion-content>
 </form>

@@ -42,7 +42,6 @@ export class TopicsListPage implements OnInit {
    */
   delete(topic: Topic): void {
     this.topicService.delete(topic);
-    this._fetchAllTopics();
   }
 
   /**
@@ -62,7 +61,6 @@ export class TopicsListPage implements OnInit {
 
     if (role === 'confirmed') {
       this._createTopic(data);
-      this._fetchAllTopics();
     }
   }
 
