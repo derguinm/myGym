@@ -7,6 +7,7 @@ import { TopicsListPage } from './topics-list.page';
 import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
 import { SharedModule } from 'src/app/components/shared.module';
 
+
 @NgModule({
   imports: [
     CommonModule,

@@ -1,0 +1,50 @@
+<!-- <ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>My App</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="credentials" (ngSubmit)="login()">
+  
+    <ion-item fill="solid" class="ion-margin-bottom">
+      <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
+    </ion-item>
+
+    <ion-item fill="solid" class="ion-margin-bottom">
+      <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+    </ion-item>I
+   
+    <ion-button expend="full" type="submit" [disabled]="!credentials.valid">Login</ion-button>
+    <ion-button expend="full" type="button" (click)="register()">create a account</ion-button>
+  
+  </form>
+</ion-content> -->
+
+
+<ion-content class="ion-padding">
+  
+    
+    <div class="logo">
+      <!-- <ion-icon color="light" name="sunny"></ion-icon> -->
+      <!-- <ion-icon color="light" name="contact"></ion-icon> -->
+      <!-- <ion-icon color="light" name="cloudy-night"></ion-icon> -->
+      <img src="../../assets/icon/strong.png">
+    </div>
+
+    <form [formGroup]="credentials" (ngSubmit)="login()">
+      <ion-item fill="solid" class="ion-margin-bottom">
+        <ion-label color="light">Email</ion-label>
+        <ion-input color="light" type="email" placeholder="Adresse email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="light">Mot de passe</ion-label>
+        <ion-input color="light" type="password" placeholder="Mot de passe"formControlName="password" ></ion-input>
+      </ion-item>
+
+      <ion-button type="submit" color="light" expand="block" shape="round" fill="outline" [disabled]="!credentials.valid">Connexion</ion-button>
+      <br>
+      <ion-button (click)="navigateToRegister()" color="tertiary" expand="block" shape="round" routerLinkActive="active">Inscription</ion-button>
+    </form>
+
+  </ion-content>
