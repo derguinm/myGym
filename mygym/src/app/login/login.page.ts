@@ -33,21 +33,7 @@ export class LoginPage implements OnInit {
     ngOnInit() {
       
     }
-    async register() {
-      const loading = await this.loadingController.create();
-      await loading.present();
-      try {
-        console.log(this.credentials.value)
-        const user = await this.authService.register(this.credentials.value);
-        this.router.navigateByUrl('topics', {replaceUrl: true});
-
-      } catch (error) {
-        this.showAlert('registration failed','please try again');
-      } finally {
-        await loading.dismiss();
-      }
-      
-    }
+    
     
     async login() {
       const loading = await this.loadingController.create();

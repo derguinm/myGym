@@ -1,32 +1,37 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-button (click)="navigateToLogin()">
+      <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>Register</ion-title>
+    <ion-title>
+      register
+    </ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
-  <form>
-    <ion-item lines="full">
-      <ion-label position="floating">First name</ion-label>
-      <ion-input type="text" required></ion-input>
+  <form [formGroup]="userInfo" (ngSubmit)="register()">
+    <ion-item fill="full" class="ion-margin-bottom">
+      <ion-label color="light">First name</ion-label>
+      <ion-input type="text" formControlName="firstName"></ion-input>
     </ion-item>
     <ion-item lines="full">
       <ion-label position="floating">Last name</ion-label>
-      <ion-input type="text" required></ion-input>
+      <ion-input type="text" formControlName="lastName"></ion-input>
     </ion-item>
     <ion-item lines="full">
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="text" required></ion-input>
+      <ion-input color="light" type="email" placeholder="Adresse email" formControlName="email"></ion-input>
     </ion-item>
     <ion-item lines="full">
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" required></ion-input>
+      <ion-input ion-input color="light" type="password" placeholder="Mot de passe"formControlName="password" ></ion-input>
     </ion-item>
     <ion-row>
       <ion-col>
-        <ion-button type="submit" color="danger" expand="block">Sign Up</ion-button>
+        <ion-button type="submit" color="light" expand="block" shape="round" fill="outline" [disabled]="!userInfo.valid">Sign Up</ion-button>
       </ion-col>
     </ion-row>
   </form>
