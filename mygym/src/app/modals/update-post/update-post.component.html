@@ -1,4 +1,4 @@
-<form [formGroup]="updatePostForm" (ngSubmit)="updatePost()" novalidate>
+<form [formGroup]="updatePostForm" (ngSubmit)="updatePost(post)" novalidate>
   <ion-header translucent>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -12,7 +12,7 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content fullscreen>
+  <ion-content fullscreen *ngIf="post$ | async as post">
 
     <ion-item lines="full">
       <ion-label position="floating">Name</ion-label>
@@ -37,17 +37,14 @@
     </ion-item>
     <ion-item lines="full">
       <ion-label>Lecteurs</ion-label>
-      <ion-list>
-        <ion-item *ngFor="let user of (users)">{{ user.name }}<ion-button (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+      <ion-list *ngIf="users$ | async as users">
+        <ion-item *ngFor="let user of (users)">{{ user.name }}<ion-button slot="end" (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
       </ion-list>
-
-      <ion-select placeholder="Ajouter un reader" [multiple]="true">
-        <ion-select-option *ngFor="let user of (users)">{{ user.name }}</ion-select-option>
-      </ion-select>
+      <ion-button (click)="openAddReaderModal()">Ajouter un lecteur</ion-button>
     </ion-item>
     <ion-item>
       <ion-label>Modificateurs</ion-label>
-      <ion-list>
+      <ion-list *ngIf="users$ | async as users">
         <ion-item *ngFor="let user of (users)">{{ user.name }}<ion-button (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
       </ion-list>
       <ion-select placeholder="Ajouter un reader" [multiple]="true">

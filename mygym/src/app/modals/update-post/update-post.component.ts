@@ -1,19 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, Input, OnInit} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { filter, map, Observable } from 'rxjs';
 import { Post } from 'src/app/models/post';
 import { User } from 'src/app/models/user';
+import { PostService } from 'src/app/services/post.service';
 
 @Component({
   selector: 'app-update-post',
   templateUrl: './update-post.component.html',
   styleUrls: ['./update-post.component.scss'],
 })
-export class UpdatePostComponent implements OnInit {
-
-  users:User[]
+export class UpdatePostComponent implements OnInit
+{
   updatePostForm!: FormGroup;
   @Input() post: Post;
+  @Input() users$: Observable<User[]>
+  private postService = inject(PostService);
+  modalCtrl: any;
 
   constructor(private modalController: ModalController,
     private formBuilder: FormBuilder) {
@@ -45,11 +49,20 @@ export class UpdatePostComponent implements OnInit {
    * - name: a {string}, which should be not null and has a min length of 2.
    */
   ngOnInit() {
+    // this.post$.pipe(
+    //   map((post) => {
+    //     return this.formBuilder.group({
+    //       name: [post.name, [Validators.minLength(2)]],
+    //       description: [post.description, []]
+    //     })
+    //   })
+    // ).subscribe((updatePostForm) => {
+    //   this.updatePostForm = updatePostForm
+    // })
     this.updatePostForm = this.formBuilder.group({
-      name: [this.post.name, [Validators.minLength(2)]],
-      description: [this.post.description, []]
-    });
-    this.users = [{id: '1', name: 'john'}, {id: '2', name: 'doe'}]
+            name: [this.post.name, [Validators.minLength(2)]],
+            description: [this.post.description, []]
+          })
   }
 
   /**
@@ -68,14 +81,43 @@ export class UpdatePostComponent implements OnInit {
    * Public method to update a {Post} and call the methods that will give close the modal
    * with the status 'confirmed' and the given {Post}
    */
-  updatePost() {
+  updatePost(post: Post) {
     if (this.updatePostForm.valid) {
-      this.post = {
+      post = {
         ...this.updatePostForm.value,
-        id: this.post.id
+        id: post.id
       }
-      this.dismissModal(this.post, 'confirmed');
+      this.dismissModal(post, 'confirmed');
     }
+  }
+
+  /**
+   * Method made to open the {CreatePostComponent} in order to create a new {Post}.
+   *  - If the {CreatePostComponent} is closed with the role `confirmed`,
+   *  it creates a new Post with the returned data and fetch the new list.
+   *  - If the {CreatePostComponent} is closed with the role `canceled`,
+   *  it does nothing.
+   */
+  async openAddReaderModal(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+      component: addReaderComponent,
+      props:{
+        users: this.users$.pipe(
+          filter((user)=>this.post.users.includes(user))
+        )
+      }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirmed') {
+      this.addReaders(data);
+    }
+  }
+
+  addReaders(data: any){
+    console.log(data);
   }
 
 }

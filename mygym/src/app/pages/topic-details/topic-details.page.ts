@@ -6,6 +6,7 @@ import { CreatePostComponent } from 'src/app/modals/create-post/create-post.comp
 import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.component';
 import { Post } from 'src/app/models/post';
 import { Topic } from 'src/app/models/topic';
+import { User } from 'src/app/models/user';
 import { PostService } from 'src/app/services/post.service';
 import { TopicService } from 'src/app/services/topic.service';
 
@@ -19,10 +20,12 @@ export class TopicDetailsPage implements OnInit {
   search$: Observable<String> = EMPTY;
   _search: BehaviorSubject<string> = new BehaviorSubject("");
   posts$: Observable<Post[]> = EMPTY;
+  users$: Observable<User[]> = EMPTY;
   topic$: Observable<Topic | null >= EMPTY;
   topicId: string;
 
   private postService = inject(PostService);
+  private userService = inject(UserService);
   private topicService = inject(TopicService);
   private toastController = inject(ToastController);
   private modalCtrl = inject(ModalController);
@@ -43,6 +46,7 @@ export class TopicDetailsPage implements OnInit {
     this.topic$ = this.topicService.findOne(this.route.snapshot.paramMap.get('topicId')!);
     this.topicId = this.route.snapshot.paramMap.get('topicId')!
     this._fetchAllPosts()
+    this.users$ = this.userService.findAll();
   }
 
   /**
@@ -78,7 +82,8 @@ export class TopicDetailsPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: UpdatePostComponent,
       componentProps: {
-        post: post
+        post: post,
+        users$: this.users$
       }
     });
     modal.present();
