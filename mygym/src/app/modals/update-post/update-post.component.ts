@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Post } from 'src/app/models/post';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-update-post',
@@ -10,12 +11,22 @@ import { Post } from 'src/app/models/post';
 })
 export class UpdatePostComponent implements OnInit {
 
+  users:User[]
   updatePostForm!: FormGroup;
   @Input() post: Post;
 
   constructor(private modalController: ModalController,
     private formBuilder: FormBuilder) {
 
+  }
+
+  public removeReader(post: Post, user: User){
+    console.log(post.name + ' : remove reader : ' + user.name)
+    //est automatiquement supprimé des writters si besoin
+  }
+
+  public removeWritter(post: Post, user: User){
+    console.log(post.name + ' : remove writer : ' + user.name)
   }
 
   /**
@@ -38,6 +49,7 @@ export class UpdatePostComponent implements OnInit {
       name: [this.post.name, [Validators.minLength(2)]],
       description: [this.post.description, []]
     });
+    this.users = [{id: '1', name: 'john'}, {id: '2', name: 'doe'}]
   }
 
   /**

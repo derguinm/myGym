@@ -163,5 +163,4 @@ export class TopicDetailsPage implements OnInit {
       await toast.present();
     }
   }
-
 }
