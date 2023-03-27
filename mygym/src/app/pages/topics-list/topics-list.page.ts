@@ -75,6 +75,7 @@ export class TopicsListPage implements OnInit {
     this.topics$ = this.topicService.findAll().pipe(
       tap(console.log),
       switchMap(topics=>this.search$.pipe(
+        tap(console.log),
         map(search => topics.filter((t : Topic) => t.name.toLocaleUpperCase().includes(search.toLocaleUpperCase())))
       ))
     )

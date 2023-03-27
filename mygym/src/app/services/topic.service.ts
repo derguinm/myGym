@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Firestore, collection, collectionData, doc, docData, addDoc, CollectionReference, DocumentReference, deleteDoc} from '@angular/fire/firestore'
+import { BehaviorSubject, Observable, map, switchMap, of, filter } from 'rxjs';
+import { Firestore, collection, collectionData, doc, docData, addDoc, CollectionReference, DocumentReference, deleteDoc, DocumentData, getDoc} from '@angular/fire/firestore'
 import { Post } from '../models/post';
 import { Topic } from '../models/topic';
+import { Auth } from '@angular/fire/auth';
+import { user } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,7 @@ import { Topic } from '../models/topic';
 export class TopicService {
 
   private firestore = inject(Firestore);
+  private auth = inject(Auth)
 
   //l'observable qu'on utilisait avant le firestore :
   //private topics$: BehaviorSubject<Topic[]> = new BehaviorSubject([{id: '123', name: 'test', posts: []} as Topic, {id: '123', name: 'test', posts: []} as Topic]);
@@ -19,19 +22,33 @@ export class TopicService {
    *
    * @return An array of {Topic}
    */
-  findAll(): Observable<Topic[]> {
-    //avant firestore : return this.topics$.asObservable();
+  findAll(): Observable<any> {
 
-    //recuperation de tous les topics dans firebase :
+    const uid = this.auth.currentUser?.uid;
     const collectionRef = collection(this.firestore, `topics`)
-    return collectionData<any>(collectionRef, {idField: 'id'})
-
-    //note pour plus tard :
-    //si on met totos au lieu de topics ça recupere les totos dans la bdd
-    //pour recuperer les posts d'un topics :
-    //collection(this.firestore, `topics/${topicId}/posts`)
+    return of(uid).pipe(
+      switchMap(uid => {
+        return collectionData<any>(collectionRef, {idField: 'id'}).pipe(
+          map(topics => {
+            return topics.filter(topic =>  topic.creator.path.indexOf(uid) >= 0)
+             })
+        )})
+    )
   }
 
+  private async mapTopicsWithCreator(topics: DocumentData[]) {
+    return await Promise.all(topics.map(async (topic) => {
+      console.log(topic)
+      const path = topic['creator'].path;
+      const topicDoc = await getDoc(doc(this.firestore, path));
+      const creator = await topicDoc.data() as user;
+      console.log(creator)
+      return {
+        ...topic,
+        creator
+      };
+    }));
+  }
 
 
   /**
@@ -57,14 +74,17 @@ export class TopicService {
    * @param topic {Topic}, the {Topic} to add to the list
    */
   create(topic: Topic): void {
-    //avant firestore:
-    // let topics = this.topics$.value;
-    // const newTopics = topics.concat(topic)
-    // this.topics$.next(newTopics)
+    const currentUser = this.auth.currentUser;
+    const uid  = currentUser?.uid;
+    const userRef = doc(this.firestore,`users/${uid}`);
+    const updatedTopic = {
+      ...topic,
+      creator: userRef
+    }
 
     //creation d'un topic dans firestore :
-    const collectionRef = collection(this.firestore, `topics`) as CollectionReference<Topic>
-    addDoc(collectionRef, topic)
+    const collectionRef = collection(this.firestore, `topics`) 
+    addDoc(collectionRef, updatedTopic)
   }
 
   /**
@@ -79,7 +99,11 @@ export class TopicService {
     // this.topics$.next(newTopics)
 
     //suppression d'un topic dans firestore :
+    if( topic!.creator!.email !== this.auth.currentUser?.email){
+      return;
+    }
     const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
+    
     deleteDoc(documentRef);
   }
 }
