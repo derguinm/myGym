@@ -90,7 +90,23 @@ export class UpdatePostComponent implements OnInit
     this.writers$ = combineLatest(writersArray)
 
     this.postService.findOne(this.topicId, this.post.id).subscribe((post)=>{
-      this.post = post}
+      this.post = post
+
+      let readersArray: Observable<User>[] = [];
+    this.post.readerIds.forEach((id)=>{
+      readersArray.push(this.authService.findOneUser(id))
+    })
+    //readersArray
+    this.readers$ = combineLatest(readersArray).pipe(
+      //tap(console.log)
+    )
+
+    let writersArray: Observable<User>[] = [];
+    this.post.writerIds.forEach((id)=>{
+      writersArray.push(this.authService.findOneUser(id))
+    })
+    this.writers$ = combineLatest(writersArray)
+    }
       )
 
   }
