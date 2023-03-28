@@ -4,7 +4,7 @@ import { Firestore, collection, collectionData, doc, docData, addDoc, Collection
 import { Post } from '../models/post';
 import { Topic } from '../models/topic';
 import { Auth } from '@angular/fire/auth';
-import { user } from '../models/user';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +41,7 @@ export class TopicService {
       console.log(topic)
       const path = topic['creator'].path;
       const topicDoc = await getDoc(doc(this.firestore, path));
-      const creator = await topicDoc.data() as user;
+      const creator = await topicDoc.data() as User;
       console.log(creator)
       return {
         ...topic,
@@ -83,7 +83,7 @@ export class TopicService {
     }
 
     //creation d'un topic dans firestore :
-    const collectionRef = collection(this.firestore, `topics`) 
+    const collectionRef = collection(this.firestore, `topics`)
     addDoc(collectionRef, updatedTopic)
   }
 
@@ -103,7 +103,7 @@ export class TopicService {
       return;
     }
     const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
-    
+
     deleteDoc(documentRef);
   }
 }

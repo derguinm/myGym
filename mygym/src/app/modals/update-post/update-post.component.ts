@@ -5,6 +5,7 @@ import { filter, map, Observable } from 'rxjs';
 import { Post } from 'src/app/models/post';
 import { User } from 'src/app/models/user';
 import { PostService } from 'src/app/services/post.service';
+import { AddReadersToPostComponent } from '../add-readers-to-post/add-readers-to-post.component';
 
 @Component({
   selector: 'app-update-post',
@@ -25,12 +26,12 @@ export class UpdatePostComponent implements OnInit
   }
 
   public removeReader(post: Post, user: User){
-    console.log(post.name + ' : remove reader : ' + user.name)
+    console.log(post.name + ' : remove reader : ' + user.email)
     //est automatiquement supprimé des writters si besoin
   }
 
   public removeWritter(post: Post, user: User){
-    console.log(post.name + ' : remove writer : ' + user.name)
+    console.log(post.name + ' : remove writer : ' + user.email)
   }
 
   /**
@@ -98,12 +99,12 @@ export class UpdatePostComponent implements OnInit
    *  - If the {CreatePostComponent} is closed with the role `canceled`,
    *  it does nothing.
    */
-  async openAddReaderModal(): Promise<void> {
+  async openAddReadersModal(): Promise<void> {
     const modal = await this.modalCtrl.create({
-      component: addReaderComponent,
+      component: AddReadersToPostComponent,
       props:{
-        users: this.users$.pipe(
-          filter((user)=>this.post.users.includes(user))
+        users$: this.users$.pipe(
+          map((users)=>users.filter((user)=>this.post.readers.includes(user)))
         )
       }
     });

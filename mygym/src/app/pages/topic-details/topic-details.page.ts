@@ -7,6 +7,7 @@ import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.comp
 import { Post } from 'src/app/models/post';
 import { Topic } from 'src/app/models/topic';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/auth.service';
 import { PostService } from 'src/app/services/post.service';
 import { TopicService } from 'src/app/services/topic.service';
 
@@ -25,7 +26,7 @@ export class TopicDetailsPage implements OnInit {
   topicId: string;
 
   private postService = inject(PostService);
-  private userService = inject(UserService);
+  private authService = inject(AuthService);
   private topicService = inject(TopicService);
   private toastController = inject(ToastController);
   private modalCtrl = inject(ModalController);
@@ -46,7 +47,7 @@ export class TopicDetailsPage implements OnInit {
     this.topic$ = this.topicService.findOne(this.route.snapshot.paramMap.get('topicId')!);
     this.topicId = this.route.snapshot.paramMap.get('topicId')!
     this._fetchAllPosts()
-    this.users$ = this.userService.findAll();
+    this.users$ = this.authService.findAllUsers()
   }
 
   /**

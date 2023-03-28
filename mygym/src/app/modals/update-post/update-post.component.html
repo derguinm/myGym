@@ -12,7 +12,7 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content fullscreen *ngIf="post$ | async as post">
+  <ion-content fullscreen *ngIf="users$ | async as users">
 
     <ion-item lines="full">
       <ion-label position="floating">Name</ion-label>
@@ -29,7 +29,7 @@
     </ion-item>
     <ion-item lines="full">
       <ion-label>Owner</ion-label>
-      <ion-label>{{ users[1].name }}</ion-label>
+      <ion-label>{{ users[1].email }}</ion-label>
     </ion-item>
     <ion-item lines="full">
       <ion-label>Visible au public</ion-label>
@@ -38,17 +38,17 @@
     <ion-item lines="full">
       <ion-label>Lecteurs</ion-label>
       <ion-list *ngIf="users$ | async as users">
-        <ion-item *ngFor="let user of (users)">{{ user.name }}<ion-button slot="end" (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+        <ion-item *ngFor="let user of (users)">{{ user.email }}<ion-button slot="end" (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
       </ion-list>
-      <ion-button (click)="openAddReaderModal()">Ajouter un lecteur</ion-button>
+      <ion-button (click)="openAddReadersModal()">Ajouter un lecteur</ion-button>
     </ion-item>
     <ion-item>
       <ion-label>Modificateurs</ion-label>
       <ion-list *ngIf="users$ | async as users">
-        <ion-item *ngFor="let user of (users)">{{ user.name }}<ion-button (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+        <ion-item *ngFor="let user of (users)">{{ user.email }}<ion-button (click)="removeReader(post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
       </ion-list>
       <ion-select placeholder="Ajouter un reader" [multiple]="true">
-        <ion-select-option *ngFor="let user of (users)">{{ user.name }}</ion-select-option>
+        <ion-select-option *ngFor="let user of (users)">{{ user.email }}</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-content>
