@@ -63,7 +63,7 @@ export class AuthService {
 
     //recuperation de tous les topics dans firebase :
     const collectionRef = collection(this.fr, `users`) as CollectionReference<User>
-    return collectionData<any>(collectionRef)
+    return collectionData<any>(collectionRef, {idField: 'id'})
 
     //note pour plus tard :
     //si on met totos au lieu de topics ça recupere les totos dans la bdd

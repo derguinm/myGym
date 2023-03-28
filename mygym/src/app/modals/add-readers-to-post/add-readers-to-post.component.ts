@@ -10,11 +10,13 @@ import { User } from 'src/app/models/user';
 })
 export class AddReadersToPostComponent implements OnInit {
 
-  @Input() users: Observable<User[]>
+  @Input() users$: Observable<User[]>
 
   constructor(private modalController: ModalController) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.users$.subscribe((users)=>{console.log(users)})
+  }
 
   /**
    * Public method to dissmiss the modal

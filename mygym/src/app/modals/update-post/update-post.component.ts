@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnInit} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
-import { filter, map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Post } from 'src/app/models/post';
 import { User } from 'src/app/models/user';
 import { PostService } from 'src/app/services/post.service';
@@ -15,6 +15,7 @@ import { AddReadersToPostComponent } from '../add-readers-to-post/add-readers-to
 export class UpdatePostComponent implements OnInit
 {
   updatePostForm!: FormGroup;
+  @Input() topicId: string;
   @Input() post: Post;
   @Input() users$: Observable<User[]>
   private postService = inject(PostService);
@@ -26,12 +27,13 @@ export class UpdatePostComponent implements OnInit
   }
 
   public removeReader(post: Post, user: User){
-    console.log(post.name + ' : remove reader : ' + user.email)
-    //est automatiquement supprimé des writters si besoin
+    console.log(post.name + ' : remove reader : ')
+    console.log(user)
   }
 
   public removeWritter(post: Post, user: User){
-    console.log(post.name + ' : remove writer : ' + user.email)
+    console.log(post.name + ' : remove writer : ')
+    console.log(user)
   }
 
   /**
@@ -100,12 +102,13 @@ export class UpdatePostComponent implements OnInit
    *  it does nothing.
    */
   async openAddReadersModal(): Promise<void> {
+    let potentialReaders: Observable<User[]> = this.users$.pipe(
+      map((users)=>users.filter((user)=>!(this.post.readers.includes(user) || this.post.creator == user))),
+    )
     const modal = await this.modalCtrl.create({
       component: AddReadersToPostComponent,
       componentProps:{
-        users$: this.users$.pipe(
-          map((users)=>users.filter((user)=>this.post.readers.includes(user)))
-        )
+        users$: potentialReaders
       }
     });
     modal.present();
@@ -117,8 +120,9 @@ export class UpdatePostComponent implements OnInit
     }
   }
 
-  addReaders(data: any){
-    console.log(data);
+  addReaders(datas: User[]){
+    datas.forEach((data)=> this.postService.addReader(this.topicId,this.post, data))
+    //this.postService.addWriter(this.topicId, this.post, data)
   }
 
 }

@@ -5,4 +5,6 @@ export interface Post {
   name: string;
   description: string;
   readers:User[];
+  writers:User[];
+  creator:User;
 }
