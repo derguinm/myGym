@@ -1,3 +1,4 @@
+import { Observable } from "rxjs";
 import { User } from "./user";
 
 export interface Post {

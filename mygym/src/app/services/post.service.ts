@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
+import { getDoc } from '@firebase/firestore';
+import { map, Observable, switchMap } from 'rxjs';
 import { Post } from '../models/post';
 import { User } from '../models/user';
 
@@ -21,12 +22,34 @@ export class PostService {
 
     //recuperation de tous les topics dans firebase :
     const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
-    return collectionData<any>(collectionRef, {idField: 'id'})
+    //@ts-ignore
+    console.log(collectionData<any>(collectionRef, {idField: 'id'}).pipe(
+      map((posts)=>this.mapPostsWithWriters(posts))
+    ))
+    //@ts-ignore
+    return collectionData<any>(collectionRef, {idField: 'id'}).pipe(
+      map((posts)=>this.mapPostsWithWriters(posts))
+    )
+  }
 
-    //note pour plus tard :
-    //si on met totos au lieu de topics ça recupere les totos dans la bdd
-    //pour recuperer les posts d'un topics :
-    //collection(this.firestore, `topics/${topicId}/posts`)
+  mapPostsWithWriters(posts: Post[]) : Post[]{
+    posts.map((post)=>{
+//pour chaque post
+
+      // //@ts-ignore
+      // console.log(post.creator.path)
+      // //collection users.pipe(indexof id)
+      // //@ts-ignore
+      // const userRef = doc(this.firestore, `${post.creator.path}`) as DocumentReference<User>
+      //@ts-ignore
+      let creator = getDoc(post.creator, {idField: 'id'})
+      return {
+        ...post,
+        creator: creator
+      }
+    })
+
+    return posts;
   }
 
   /**
@@ -81,7 +104,7 @@ export class PostService {
     console.log('le writer :' + writer)
     const userRef = doc(this.firestore, `users/${writer.id}`) as DocumentReference<User>
 
-    post.writers = post.writers.filter((user)=>!(userRef.path.indexOf(writer.id) > -1))
+    post.writers = post.writers.filter((user)=>!(userRef.path.indexOf(user.id) > -1))
 
     const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<User>
     updateDoc(documentRef, post);

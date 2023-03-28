@@ -29,6 +29,7 @@ export class UpdatePostComponent implements OnInit
   public removeReader(post: Post, user: User){
     console.log(post.name + ' : remove reader : ')
     console.log(user)
+    //est automatiquement supprimé des writters si besoin
   }
 
   public removeWritter(post: Post, user: User){
@@ -105,6 +106,7 @@ export class UpdatePostComponent implements OnInit
     let potentialReaders: Observable<User[]> = this.users$.pipe(
       map((users)=>users.filter((user)=>!(this.post.readers.includes(user) || this.post.creator == user))),
     )
+
     const modal = await this.modalCtrl.create({
       component: AddReadersToPostComponent,
       componentProps:{

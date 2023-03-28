@@ -4,7 +4,7 @@
       <ion-buttons slot="start">
         <ion-button fill="clear" color="primary" (click)="dismissModal(null, 'canceled')">Close</ion-button>
       </ion-buttons>
-      <ion-title>Modifier un programme</ion-title>
+      <ion-title>{{ post.creator.email }}</ion-title>
       <ion-buttons slot="end">
         <ion-button fill="clear" color="primary" [disabled]="updatePostForm.invalid" type="submit">
           <ion-icon name="checkmark-outline"></ion-icon>
