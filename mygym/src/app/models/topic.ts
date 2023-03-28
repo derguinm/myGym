@@ -5,7 +5,7 @@ export interface Topic {
   id: string;
   name: string;
   posts: Post[];
-  creator:User;
-  readers:User[];
-  writers:User[];
+  creatorId:string;
+  readerIds:string[];
+  writerIds:string[];
 }

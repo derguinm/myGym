@@ -1,9 +1,10 @@
 import { Component, inject, Input, OnInit} from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
-import { map, Observable, tap } from 'rxjs';
+import { combineLatest, forkJoin, map, Observable, tap } from 'rxjs';
 import { Post } from 'src/app/models/post';
 import { User } from 'src/app/models/user';
+import { AuthService } from 'src/app/services/auth.service';
 import { PostService } from 'src/app/services/post.service';
 import { AddReadersToPostComponent } from '../add-readers-to-post/add-readers-to-post.component';
 
@@ -17,8 +18,13 @@ export class UpdatePostComponent implements OnInit
   updatePostForm!: FormGroup;
   @Input() topicId: string;
   @Input() post: Post;
+  public post$ : Observable<Post>
   @Input() users$: Observable<User[]>
+  public creator$ : Observable<User>
+  public writers$ : Observable<User[]>
+  public readers$ : Observable<User[]>
   private postService = inject(PostService);
+  private authService = inject(AuthService);
   private modalCtrl = inject(ModalController);
 
   constructor(private modalController: ModalController,
@@ -26,15 +32,14 @@ export class UpdatePostComponent implements OnInit
 
   }
 
-  public removeReader(post: Post, user: User){
-    console.log(post.name + ' : remove reader : ')
-    console.log(user)
+  public removeReader(topicId: string, post: Post, user: User){
     //est automatiquement supprimé des writters si besoin
+    console.log(user)
+    this.postService.removeReader(topicId, post, user)
   }
 
-  public removeWritter(post: Post, user: User){
-    console.log(post.name + ' : remove writer : ')
-    console.log(user)
+  public removeWritter(topicId: string, post: Post, user: User){
+    this.postService.removeWriter(topicId, post, user)
   }
 
   /**
@@ -67,6 +72,27 @@ export class UpdatePostComponent implements OnInit
             name: [this.post.name, [Validators.minLength(2)]],
             description: [this.post.description, []]
           })
+
+    this.creator$ = this.authService.findOneUser(this.post.creatorId);
+    let readersArray: Observable<User>[] = [];
+    this.post.readerIds.forEach((id)=>{
+      readersArray.push(this.authService.findOneUser(id))
+    })
+    //readersArray
+    this.readers$ = combineLatest(readersArray).pipe(
+      //tap(console.log)
+    )
+
+    let writersArray: Observable<User>[] = [];
+    this.post.writerIds.forEach((id)=>{
+      writersArray.push(this.authService.findOneUser(id))
+    })
+    this.writers$ = combineLatest(writersArray)
+
+    this.postService.findOne(this.topicId, this.post.id).subscribe((post)=>{
+      this.post = post}
+      )
+
   }
 
   /**
@@ -104,7 +130,7 @@ export class UpdatePostComponent implements OnInit
    */
   async openAddReadersModal(): Promise<void> {
     let potentialReaders: Observable<User[]> = this.users$.pipe(
-      map((users)=>users.filter((user)=>!(this.post.readers.includes(user) || this.post.creator == user))),
+      map((users)=>users.filter((user)=>!((this.post.readerIds.indexOf(user.id) > 0) || this.post.creatorId == user.id))),
     )
 
     const modal = await this.modalCtrl.create({

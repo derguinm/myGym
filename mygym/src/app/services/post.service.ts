@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentReference, Firestore, updateDoc } from '@angular/fire/firestore';
 import { getDoc } from '@firebase/firestore';
 import { map, Observable, switchMap } from 'rxjs';
@@ -11,6 +12,7 @@ import { User } from '../models/user';
 export class PostService {
 
   private firestore = inject(Firestore);
+  private auth = inject(Auth)
 
   /**
    * Method that returns all the topics
@@ -23,33 +25,7 @@ export class PostService {
     //recuperation de tous les topics dans firebase :
     const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
     //@ts-ignore
-    console.log(collectionData<any>(collectionRef, {idField: 'id'}).pipe(
-      map((posts)=>this.mapPostsWithWriters(posts))
-    ))
-    //@ts-ignore
-    return collectionData<any>(collectionRef, {idField: 'id'}).pipe(
-      map((posts)=>this.mapPostsWithWriters(posts))
-    )
-  }
-
-  mapPostsWithWriters(posts: Post[]) : Post[]{
-    posts.map((post)=>{
-//pour chaque post
-
-      // //@ts-ignore
-      // console.log(post.creator.path)
-      // //collection users.pipe(indexof id)
-      // //@ts-ignore
-      // const userRef = doc(this.firestore, `${post.creator.path}`) as DocumentReference<User>
-      //@ts-ignore
-      let creator = getDoc(post.creator, {idField: 'id'})
-      return {
-        ...post,
-        creator: creator
-      }
-    })
-
-    return posts;
+    return collectionData<any>(collectionRef, {idField: 'id'})
   }
 
   /**
@@ -66,9 +42,17 @@ export class PostService {
     //   topics[topicIndex].posts = topics[topicIndex]?.posts.concat(post);
     // }
     // this.topics$.next(topics)
+    const currentUser = this.auth.currentUser;
+    const uid  = currentUser?.uid;
+    const updatedPost = {
+      ...post,
+      creatorId: uid,
+      readerIds: [],
+      writerIds: []
+    }
 
-    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`) as CollectionReference<Post>
-    addDoc(collectionRef, post)
+    const collectionRef = collection(this.firestore, `topics/${topicId}/posts`)
+    addDoc(collectionRef, updatedPost)
   }
 
   /**
@@ -102,35 +86,45 @@ export class PostService {
 
   removeWriter(topicId: string, post: Post, writer: User){
     console.log('le writer :' + writer)
-    const userRef = doc(this.firestore, `users/${writer.id}`) as DocumentReference<User>
 
-    post.writers = post.writers.filter((user)=>!(userRef.path.indexOf(user.id) > -1))
+    post.writerIds = post.writerIds.filter((writerId)=>!(writerId == writer.id))
 
     const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<User>
     updateDoc(documentRef, post);
   }
 
   removeReader(topicId: string, post: Post, reader: User){
-    console.log('le reader :' + reader)
-    const userRef = doc(this.firestore, `users/${reader.id}`) as DocumentReference<User>
+    // console.log('le reader :' + reader.id)
 
-    post.readers = post.readers.filter((user)=>!(userRef.path.indexOf(user.id) > -1))
-    post.writers = post.writers.filter((user)=>!(userRef.path.indexOf(user.id) > -1))
+    post.readerIds = post.readerIds.filter((userId)=>!(userId == reader.id))
+    post.writerIds = post.writerIds.filter((userId)=>!(userId == reader.id))
 
+    // console.log("post :")
+    // console.log(post)
     const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<User>
     updateDoc(documentRef, post);
+  }
+
+  findOne(topicId: string, postId: string): Observable<Post> {
+    //avant firestore :
+    // return (this.topics$).pipe(
+    //   map(topics => topics.find(t =>t.id === id) ?? null)
+    // )
+
+    //recuperation d'un topic dans firebase par id :
+    const documentRef = doc(this.firestore, `topics/${topicId}/posts/${postId}`)
+    return docData<any>(documentRef, {idField: 'id'})
   }
 
   addWriter(topicId: string, post: Post, writer: User){
     // const collectionRef = collection(this.firestore, `topics/${topicId}/posts/${post.id}/writers`) as CollectionReference<User>
     // addDoc(collectionRef, writer);
 
-    const userRef = doc(this.firestore, `users/${writer.id}`) as DocumentReference<User>
 
-    if(post.readers.filter((user)=>(userRef.path.indexOf(user.id) > -1)).length > 0){
-      post.readers.push(userRef)
+    if(post.readerIds.indexOf(writer.id) < 0){
+      post.readerIds.push(writer.id)
     }
-    post.writers.push(userRef)
+    post.writerIds.push(writer.id)
 
     const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Post>;
     updateDoc(documentRef, post);
@@ -140,9 +134,7 @@ export class PostService {
     // const collectionRef = collection(this.firestore, `topics/${topicId}/posts/${post.id}/writers`) as CollectionReference<User>
     // addDoc(collectionRef, writer);
 
-    const userRef = doc(this.firestore, `users/${reader.id}`) as DocumentReference<User>
-
-    post.readers.push(userRef)
+    post.readerIds.push(reader.id)
 
     const documentRef = doc(this.firestore, `topics/${topicId}/posts/${post.id}`) as DocumentReference<Post>;
     updateDoc(documentRef, post);

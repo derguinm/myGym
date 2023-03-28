@@ -60,8 +60,6 @@ export class CreatePostComponent implements OnInit {
       const post: Post = {
         ...this.createPostForm.value,
         id: Date.now().toString() + (Math.random() * 100).toFixed(),
-        readers: [],
-        writers: [],
       };
       this.dismissModal(post, 'confirmed');
     }

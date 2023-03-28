@@ -47,7 +47,7 @@ export class TopicDetailsPage implements OnInit {
     this.topic$ = this.topicService.findOne(this.route.snapshot.paramMap.get('topicId')!);
     this.topicId = this.route.snapshot.paramMap.get('topicId')!
     this._fetchAllPosts()
-    this.users$ = this.authService.findAllUsers()
+    this.users$ = this.authService.findAllUsers()//.pipe(tap(console.log))
   }
 
   /**
@@ -131,7 +131,7 @@ export class TopicDetailsPage implements OnInit {
    */
   private _fetchAllPosts(): void {
     this.posts$ = this.postService.findAll(this.topicId).pipe(
-      tap(console.log),
+      //tap(console.log),
       switchMap(posts=>this.search$.pipe(
         map(search => posts.filter((p : Post) => p.name.toLocaleUpperCase().includes(search.toLocaleUpperCase()) || p.description.toLocaleUpperCase().includes(search.toLocaleUpperCase())))
       ))
