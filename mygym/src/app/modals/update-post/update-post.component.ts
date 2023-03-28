@@ -18,7 +18,7 @@ export class UpdatePostComponent implements OnInit
   @Input() post: Post;
   @Input() users$: Observable<User[]>
   private postService = inject(PostService);
-  modalCtrl: any;
+  private modalCtrl = inject(ModalController);
 
   constructor(private modalController: ModalController,
     private formBuilder: FormBuilder) {
@@ -102,7 +102,7 @@ export class UpdatePostComponent implements OnInit
   async openAddReadersModal(): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: AddReadersToPostComponent,
-      props:{
+      componentProps:{
         users$: this.users$.pipe(
           map((users)=>users.filter((user)=>this.post.readers.includes(user)))
         )
