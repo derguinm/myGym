@@ -145,8 +145,12 @@ export class UpdatePostComponent implements OnInit
    *  it does nothing.
    */
   async openAddReadersModal(): Promise<void> {
+    console.log('readersId')
+    console.log(this.post.readerIds)
     let potentialReaders: Observable<User[]> = this.users$.pipe(
-      map((users)=>users.filter((user)=>!((this.post.readerIds.indexOf(user.id) > 0) || this.post.creatorId == user.id))),
+      tap(console.log),
+      //@ts-ignore
+      map((users)=>users.filter((user)=>!((this.post.readerIds.indexOf(user.id) >= 0) || this.post.creatorId == user.id))),
     )
 
     const modal = await this.modalCtrl.create({
