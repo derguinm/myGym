@@ -24,10 +24,6 @@
       </span>
     </ion-text>
     <ion-item lines="full">
-      <ion-label position="floating">Description</ion-label>
-      <ion-textarea type="text" name="description" formControlName="description" ></ion-textarea>
-    </ion-item>
-    <ion-item lines="full">
       <ion-label>Owner</ion-label>
       <ion-label *ngIf="creator$ | async as creator">{{ creator.email }}</ion-label>
     </ion-item>
