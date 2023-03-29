@@ -1,8 +1,16 @@
-<p (click)="addReaders([])">
-  add-readers-to-post works!
-</p>
-<ion-list *ngIf="users$ | async as users">
+<!-- <ion-list *ngIf="users$ | async as users">
   <ion-item *ngFor="let user of (users)" (click)="addReaders([user])">
     <ion-label>{{ user.email }}</ion-label>
   </ion-item>
-</ion-list>
+</ion-list> -->
+<ion-item>
+<ion-select *ngIf="users$ | async as users" placeholder="Choisir les utilisateurs à ajouter" [compareWith]="compareWith" [multiple]="true" (ionChange)="handleChange($event)">
+  <ion-select-option *ngFor="let user of users" [value]="user">{{ user.firstName }}</ion-select-option>
+</ion-select>
+</ion-item>
+<ion-item>
+  <ion-button (click)="addReaders()">Ajouter</ion-button>
+<ion-button (click)="dismissModal(null, 'canceled')">Annuler</ion-button>
+</ion-item>
+
+

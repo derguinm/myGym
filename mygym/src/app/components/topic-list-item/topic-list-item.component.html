@@ -3,8 +3,12 @@
 
 </ion-item>
 
-<ion-item-options side="end">
-  <ion-item-option (click)="onDelete.emit(topic)" color="danger">
+<ion-item-options *ngIf="isWriter()" side="end">
+  <ion-item-option (click)="onUpdate.emit(topic)" color="warning">
+    <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+  </ion-item-option>
+
+  <ion-item-option *ngIf="isCreator()" (click)="onDelete.emit(topic)" color="danger">
     <ion-icon slot="icon-only" name="trash"></ion-icon>
   </ion-item-option>
 </ion-item-options>

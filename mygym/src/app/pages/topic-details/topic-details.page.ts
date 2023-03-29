@@ -5,6 +5,7 @@ import { BehaviorSubject, EMPTY, map, Observable, switchMap, tap } from 'rxjs';
 import { CreatePostComponent } from 'src/app/modals/create-post/create-post.component';
 import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.component';
 import { Post } from 'src/app/models/post';
+import { Auth } from '@angular/fire/auth';
 import { Topic } from 'src/app/models/topic';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
@@ -24,9 +25,12 @@ export class TopicDetailsPage implements OnInit {
   users$: Observable<User[]> = EMPTY;
   topic$: Observable<Topic | null >= EMPTY;
   topicId: string;
+  topic: Topic | null;
 
+  private currentUserId: string;
   private postService = inject(PostService);
   private authService = inject(AuthService);
+  private auth = inject(Auth)
   private topicService = inject(TopicService);
   private toastController = inject(ToastController);
   private modalCtrl = inject(ModalController);
@@ -37,6 +41,8 @@ export class TopicDetailsPage implements OnInit {
    * Fetch all the posts during the ngOnInit hook
    */
   ngOnInit(): void {
+    let currentUser = this.auth.currentUser;
+    this.currentUserId = currentUser!.uid;
     this.search$ = this._search.asObservable();
     // this.topics$ = this.topicService.findAll().pipe(
     //   tap(console.log),
@@ -45,6 +51,9 @@ export class TopicDetailsPage implements OnInit {
     //   )
     // )
     this.topic$ = this.topicService.findOne(this.route.snapshot.paramMap.get('topicId')!);
+    this.topic$.subscribe((topic)=>{
+      this.topic = topic;
+    })
     this.topicId = this.route.snapshot.paramMap.get('topicId')!
     this._fetchAllPosts()
     this.users$ = this.authService.findAllUsers()//.pipe(tap(console.log))
@@ -85,7 +94,7 @@ export class TopicDetailsPage implements OnInit {
       componentProps: {
         post: post,
         users$: this.users$,
-        topicId: this.topicId
+        topic: this.topic
       }
     });
     modal.present();
@@ -169,5 +178,9 @@ export class TopicDetailsPage implements OnInit {
 
       await toast.present();
     }
+  }
+
+  isWriter(){
+    return (typeof this.topic != 'undefined') && (this.currentUserId == this.topic?.creatorId || this.topic!.writerIds.indexOf(this.currentUserId) >= 0)
   }
 }

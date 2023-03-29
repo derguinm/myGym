@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 
 @Component({
-  selector: 'app-add-readers-to-post',
-  templateUrl: './add-readers-to-post.component.html',
-  styleUrls: ['./add-readers-to-post.component.scss'],
+  selector: 'app-add-readers-to-topic',
+  templateUrl: './add-readers-to-topic.component.html',
+  styleUrls: ['./add-readers-to-topic.component.scss'],
 })
-export class AddReadersToPostComponent implements OnInit {
+export class AddReadersToTopicComponent implements OnInit {
 
   @Input() users$: Observable<User[]>
 
