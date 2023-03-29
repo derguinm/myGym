@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, switchMap, of, filter } from 'rxjs';
-import { Firestore, collection, collectionData, doc, docData, addDoc, CollectionReference, DocumentReference, deleteDoc, DocumentData, getDoc} from '@angular/fire/firestore'
+import { Firestore, collection, collectionData, doc, docData, addDoc, CollectionReference, DocumentReference, deleteDoc, DocumentData, getDoc, updateDoc} from '@angular/fire/firestore'
 import { Post } from '../models/post';
 import { Topic } from '../models/topic';
 import { Auth } from '@angular/fire/auth';
@@ -30,7 +30,7 @@ export class TopicService {
       switchMap(uid => {
         return collectionData<any>(collectionRef, {idField: 'id'}).pipe(
           map(topics => {
-            return topics.filter(topic =>  topic.creatorId == uid)
+            return topics.filter(topic =>  (topic.creatorId == uid || topic.readerIds.indexOf(uid) >= 0))
              })
         )})
     )
@@ -43,7 +43,7 @@ export class TopicService {
    * @param id {string} the given id
    * @return A {Topic}
    */
-  findOne(id: string): Observable<Topic | null> {
+  findOne(id: string): Observable<Topic> {
     //avant firestore :
     // return (this.topics$).pipe(
     //   map(topics => topics.find(t =>t.id === id) ?? null)
@@ -87,5 +87,57 @@ export class TopicService {
     const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
 
     deleteDoc(documentRef);
+  }
+
+  addWriter(topic: Topic, writer: User){
+    // const collectionRef = collection(this.firestore, `topics/${topicId}/posts/${post.id}/writers`) as CollectionReference<User>
+    // addDoc(collectionRef, writer);
+
+    // console.log("id du writer a ajouter : ")
+    // console.log(writer.id)
+    if(topic.readerIds.indexOf(writer.id) < 0){
+      topic.readerIds.push(writer.id)
+    }
+    topic.writerIds.push(writer.id)
+
+    const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
+    updateDoc(documentRef, topic);
+  }
+
+  addReader(topic: Topic, reader: User){
+    // const collectionRef = collection(this.firestore, `topics/${topicId}/posts/${post.id}/writers`) as CollectionReference<User>
+    // addDoc(collectionRef, writer);
+
+
+    topic.readerIds.push(reader.id)
+
+    const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
+    updateDoc(documentRef, topic);
+  }
+
+  update(topic: Topic): void {
+    const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
+    updateDoc(documentRef, topic);
+  }
+
+  removeWriter(topic: Topic, writer: User){
+    console.log('le writer :' + writer)
+
+    topic.writerIds = topic.writerIds.filter((writerId)=>!(writerId == writer.id))
+
+    const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>
+    updateDoc(documentRef, topic);
+  }
+
+  removeReader(topic: Topic, reader: User){
+    // console.log('le reader :' + reader.id)
+
+    topic.readerIds = topic.readerIds.filter((userId)=>!(userId == reader.id))
+    topic.writerIds = topic.writerIds.filter((userId)=>!(userId == reader.id))
+
+    // console.log("post :")
+    // console.log(post)
+    const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>
+    updateDoc(documentRef, topic);
   }
 }

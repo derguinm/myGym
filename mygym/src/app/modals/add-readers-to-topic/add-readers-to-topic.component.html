@@ -1,0 +1,10 @@
+
+<ion-item>
+  <ion-select *ngIf="users$ | async as users" placeholder="Choisir les utilisateurs à ajouter" [compareWith]="compareWith" [multiple]="true" (ionChange)="handleChange($event)">
+    <ion-select-option *ngFor="let user of users" [value]="user">{{ user.firstName }}</ion-select-option>
+  </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-button (click)="addReaders()">Ajouter</ion-button>
+  <ion-button (click)="dismissModal(null, 'canceled')">Annuler</ion-button>
+  </ion-item>

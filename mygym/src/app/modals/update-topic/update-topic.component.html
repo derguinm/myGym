@@ -1,3 +1,51 @@
-<p>
-  update-topic works!
-</p>
+<form [formGroup]="updateTopicForm" (ngSubmit)="updateTopic(topic)" novalidate>
+  <ion-header translucent>
+    <ion-toolbar >
+      <ion-buttons slot="start">
+        <ion-button fill="clear" color="primary" (click)="dismissModal(null, 'canceled')">Close</ion-button>
+      </ion-buttons>
+      <ion-title >{{ topic.name }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button fill="clear" color="primary" [disabled]="updateTopicForm.invalid" type="submit">
+          <ion-icon name="checkmark-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen *ngIf="users$ | async as users">
+
+    <ion-item lines="full">
+      <ion-label position="floating">Name</ion-label>
+      <ion-input type="text" name="name" formControlName="name" ></ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="controls['name'].touched && controls['name'].errors?.['minlength']">
+      <span>
+        Minimum length 2
+      </span>
+    </ion-text>
+    <ion-item lines="full">
+      <ion-label position="floating">Description</ion-label>
+      <ion-textarea type="text" name="description" formControlName="description" ></ion-textarea>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>Owner</ion-label>
+      <ion-label *ngIf="creator$ | async as creator">{{ creator.email }}</ion-label>
+    </ion-item>
+    <div *ngIf="isCreator()">
+    <ion-item lines="full">
+      <ion-label>Lecteurs</ion-label>
+      <ion-list *ngIf="readers$ | async as readers">
+        <ion-item *ngFor="let user of (readers)">{{ user.email }}<ion-button slot="end" (click)="removeReader(topic, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+      </ion-list>
+      <ion-button (click)="openAddReadersModal()">Ajouter un lecteur</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Modificateurs</ion-label>
+      <ion-list *ngIf="writers$ | async as writers">
+        <ion-item *ngFor="let user of (writers)">{{ user.email }}<ion-button slot="end" (click)="removeWriter(topic, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+      </ion-list>
+      <ion-button (click)="openAddWritersModal()">Ajouter un modificateur</ion-button>
+    </ion-item>
+  </div>
+  </ion-content>
+</form>

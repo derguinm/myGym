@@ -74,6 +74,6 @@ export class AuthService {
   findOneUser(id: string): Observable<User>{
     console.log("on recherche : " + id)
     const documentRef = doc(this.fr, `/users/${id}`) as DocumentReference<User>
-    return docData<any>(documentRef, {idField: 'id'})
+    return docData<any>(documentRef, {idField: 'id'}).pipe(tap(console.log))
   }
 }

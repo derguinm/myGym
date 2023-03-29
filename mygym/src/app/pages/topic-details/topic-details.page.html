@@ -20,7 +20,7 @@
       <app-post-list-item [post]="post" (onDelete)="delete($event)" (onUpdate)="openUpdatePostModal($event)"></app-post-list-item>
     </ion-item-sliding>
   </ion-list>
-  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed" *ngIf="isWriter()">
     <ion-fab-button (click)="openCreatePostModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

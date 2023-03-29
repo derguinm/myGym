@@ -6,6 +6,8 @@ import { TopicsListPageRoutingModule } from './topics-list-routing.module';
 import { TopicsListPage } from './topics-list.page';
 import { CreateTopicComponent } from 'src/app/modals/create-topic/create-topic.component';
 import { SharedModule } from 'src/app/components/shared.module';
+import { UpdateTopicComponent } from 'src/app/modals/update-topic/update-topic.component';
+import { AddReadersToTopicComponent } from 'src/app/modals/add-readers-to-topic/add-readers-to-topic.component';
 
 
 @NgModule({
@@ -17,6 +19,6 @@ import { SharedModule } from 'src/app/components/shared.module';
     TopicsListPageRoutingModule,
     SharedModule
   ],
-  declarations: [TopicsListPage,CreateTopicComponent]
+  declarations: [TopicsListPage,CreateTopicComponent, UpdateTopicComponent, AddReadersToTopicComponent]
 })
 export class TopicsListPageModule {}
