@@ -25,20 +25,20 @@
     </ion-text>
     <ion-item lines="full">
       <ion-label>Owner</ion-label>
-      <ion-label *ngIf="creator$ | async as creator">{{ creator.email }}</ion-label>
+      <ion-label *ngIf="creator$ | async as creator">{{ creator.firstName }}</ion-label>
     </ion-item>
     <div *ngIf="isCreator()">
     <ion-item lines="full">
       <ion-label>Lecteurs</ion-label>
       <ion-list *ngIf="readers$ | async as readers">
-        <ion-item *ngFor="let user of (readers)">{{ user.email }}<ion-button slot="end" (click)="removeReader(topic, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+        <ion-item *ngFor="let user of (readers)">{{ user.firstName }}<ion-button slot="end" (click)="removeReader(topic, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
       </ion-list>
       <ion-button (click)="openAddReadersModal()">Ajouter un lecteur</ion-button>
     </ion-item>
     <ion-item>
       <ion-label>Modificateurs</ion-label>
       <ion-list *ngIf="writers$ | async as writers">
-        <ion-item *ngFor="let user of (writers)">{{ user.email }}<ion-button slot="end" (click)="removeWriter(topic, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+        <ion-item *ngFor="let user of (writers)">{{ user.firstName }}<ion-button slot="end" (click)="removeWriter(topic, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
       </ion-list>
       <ion-button (click)="openAddWritersModal()">Ajouter un modificateur</ion-button>
     </ion-item>

@@ -140,6 +140,8 @@ export class PostService {
 
     const documentRef = doc(this.firestore, `topics/${topic.id}/posts/${post.id}`) as DocumentReference<Post>;
     updateDoc(documentRef, post);
+
+    this.topicService.addReader(topic, writer)
   }
 
   addReader(topic: Topic, post: Post, reader: User){
