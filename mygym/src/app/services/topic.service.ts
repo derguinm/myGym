@@ -4,7 +4,7 @@ import { Firestore, collection, collectionData, doc, docData, addDoc, Collection
 import { Post } from '../models/post';
 import { Topic } from '../models/topic';
 import { Auth } from '@angular/fire/auth';
-import { user } from '../models/user';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -30,24 +30,10 @@ export class TopicService {
       switchMap(uid => {
         return collectionData<any>(collectionRef, {idField: 'id'}).pipe(
           map(topics => {
-            return topics.filter(topic =>  topic.creator.path.indexOf(uid) >= 0)
+            return topics.filter(topic =>  topic.creatorId == uid)
              })
         )})
     )
-  }
-
-  private async mapTopicsWithCreator(topics: DocumentData[]) {
-    return await Promise.all(topics.map(async (topic) => {
-      console.log(topic)
-      const path = topic['creator'].path;
-      const topicDoc = await getDoc(doc(this.firestore, path));
-      const creator = await topicDoc.data() as user;
-      console.log(creator)
-      return {
-        ...topic,
-        creator
-      };
-    }));
   }
 
 
@@ -76,14 +62,15 @@ export class TopicService {
   create(topic: Topic): void {
     const currentUser = this.auth.currentUser;
     const uid  = currentUser?.uid;
-    const userRef = doc(this.firestore,`users/${uid}`);
     const updatedTopic = {
       ...topic,
-      creator: userRef
+      creatorId: uid,
+      readerIds: [],
+      writerIds: []
     }
 
     //creation d'un topic dans firestore :
-    const collectionRef = collection(this.firestore, `topics`) 
+    const collectionRef = collection(this.firestore, `topics`)
     addDoc(collectionRef, updatedTopic)
   }
 
@@ -97,13 +84,8 @@ export class TopicService {
     // const topics = this.topics$.value
     // const newTopics = topics.filter(t => t.id !== topic.id)
     // this.topics$.next(newTopics)
-
-    //suppression d'un topic dans firestore :
-    if( topic!.creator!.email !== this.auth.currentUser?.email){
-      return;
-    }
     const documentRef = doc(this.firestore, `topics/${topic.id}`) as DocumentReference<Topic>;
-    
+
     deleteDoc(documentRef);
   }
 }

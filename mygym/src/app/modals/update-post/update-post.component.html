@@ -1,10 +1,10 @@
-<form [formGroup]="updatePostForm" (ngSubmit)="updatePost()" novalidate>
+<form [formGroup]="updatePostForm" (ngSubmit)="updatePost(post)" novalidate>
   <ion-header translucent>
-    <ion-toolbar>
+    <ion-toolbar >
       <ion-buttons slot="start">
         <ion-button fill="clear" color="primary" (click)="dismissModal(null, 'canceled')">Close</ion-button>
       </ion-buttons>
-      <ion-title>Modifier un programme</ion-title>
+      <ion-title >{{ post.name }}</ion-title>
       <ion-buttons slot="end">
         <ion-button fill="clear" color="primary" [disabled]="updatePostForm.invalid" type="submit">
           <ion-icon name="checkmark-outline"></ion-icon>
@@ -12,7 +12,7 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content fullscreen>
+  <ion-content fullscreen *ngIf="users$ | async as users">
 
     <ion-item lines="full">
       <ion-label position="floating">Name</ion-label>
@@ -26,6 +26,23 @@
     <ion-item lines="full">
       <ion-label position="floating">Description</ion-label>
       <ion-textarea type="text" name="description" formControlName="description" ></ion-textarea>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>Owner</ion-label>
+      <ion-label *ngIf="creator$ | async as creator">{{ creator.email }}</ion-label>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>Lecteurs</ion-label>
+      <ion-list *ngIf="readers$ | async as readers">
+        <ion-item *ngFor="let user of (readers)">{{ user.email }}<ion-button slot="end" (click)="removeReader(topicId, post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+      </ion-list>
+      <ion-button (click)="openAddReadersModal()">Ajouter un lecteur</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Modificateurs</ion-label>
+      <ion-list *ngIf="writers$ | async as writers">
+        <ion-item *ngFor="let user of (writers)">{{ user.email }}<ion-button (click)="removeReader(topicId, post, user)"><ion-icon slot="icon-only" name="remove-circle-outline"></ion-icon></ion-button></ion-item>
+      </ion-list>
     </ion-item>
   </ion-content>
 </form>

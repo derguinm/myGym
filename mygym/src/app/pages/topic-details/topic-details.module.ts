@@ -10,6 +10,7 @@ import { TopicDetailsPage } from './topic-details.page';
 import { SharedModule } from 'src/app/components/shared.module';
 import { CreatePostComponent } from 'src/app/modals/create-post/create-post.component';
 import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.component';
+import { AddReadersToPostComponent } from 'src/app/modals/add-readers-to-post/add-readers-to-post.component';
 
 @NgModule({
 
@@ -21,6 +22,6 @@ import { UpdatePostComponent } from 'src/app/modals/update-post/update-post.comp
     TopicDetailsPageRoutingModule,
     SharedModule
   ],
-  declarations: [TopicDetailsPage, CreatePostComponent, UpdatePostComponent]
+  declarations: [TopicDetailsPage, CreatePostComponent, UpdatePostComponent, AddReadersToPostComponent]
 })
 export class TopicDetailsPageModule {}

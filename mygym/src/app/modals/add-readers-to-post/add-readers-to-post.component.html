@@ -1,0 +1,8 @@
+<p (click)="addReaders([])">
+  add-readers-to-post works!
+</p>
+<ion-list *ngIf="users$ | async as users">
+  <ion-item *ngFor="let user of (users)" (click)="addReaders([user])">
+    <ion-label>{{ user.email }}</ion-label>
+  </ion-item>
+</ion-list>
