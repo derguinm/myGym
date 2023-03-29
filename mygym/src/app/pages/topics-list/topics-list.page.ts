@@ -94,7 +94,7 @@ export class TopicsListPage implements OnInit {
       this.topicService.update(topic);
 
       const toast = await this.toastController.create({
-        message: `Post successfully updated`,
+        message: `Category successfully updated`,
         duration: 1500,
         position: 'bottom',
         color: 'success'
@@ -103,7 +103,7 @@ export class TopicsListPage implements OnInit {
       await toast.present();
     } catch (e) {
       const toast = await this.toastController.create({
-        message: `Failed updating post`,
+        message: `Failed updating category`,
         duration: 1500,
         position: 'bottom',
         color: 'danger'
